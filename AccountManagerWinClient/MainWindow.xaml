@@ -1,0 +1,185 @@
+﻿<Window x:Class="WPFDotNetCoreClient.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WPFDotNetCoreClient"
+        mc:Ignorable="d"
+        Title="Account Manager Client With C#" MaxHeight="650" MaxWidth="850" MinHeight="550" MinWidth="750" ResizeMode="CanResize">
+    <Window.Resources>
+        <Style x:Key="Label_VH_Center" TargetType="Label">
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+        </Style>
+        <Style x:Key="RadioButton_VH_Center" TargetType="RadioButton">
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30" />
+            <RowDefinition Height="2*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3">
+            <TabControl>
+                <TabItem Header="Generator" Name="Tab_Generator">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="0.7*" />
+                            <ColumnDefinition Width="1.5*" />
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="1.5*"/>
+                            <ColumnDefinition Width="1*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="0.8*"/>
+                            <RowDefinition Height="1*"/>
+                            <RowDefinition Height="1*"/>
+                            <RowDefinition Height="1*"/>
+                            <RowDefinition Height="1*"/>
+                            <RowDefinition Height="1*"/>
+                            <RowDefinition Height="1*"/>
+                            <RowDefinition Height="1*"/>
+                            <RowDefinition Height="0.8*"/>
+                            <RowDefinition Height="1.4*"/>
+                            <RowDefinition Height="3*"/>
+                        </Grid.RowDefinitions>
+
+                        <Label Grid.Row="1" Grid.Column="1" Style="{StaticResource Label_VH_Center}" Content="Address" />
+                        <Label Grid.Row="2" Grid.Column="1" Style="{StaticResource Label_VH_Center}" Content="Account" />
+                        <Label Grid.Row="3" Grid.Column="1" Style="{StaticResource Label_VH_Center}" Content="Password lv1" />
+                        <Label Grid.Row="4" Grid.Column="1" Style="{StaticResource Label_VH_Center}" Content="Password lv2" />
+                        <Label Grid.Row="5" Grid.Column="1" Style="{StaticResource Label_VH_Center}" Content="Password lv3" />
+                        <Label Grid.Row="6" Grid.Column="1" Style="{StaticResource Label_VH_Center}" Content="Password lv max" />
+                        <Label Grid.Row="7" Grid.Column="1" Style="{StaticResource Label_VH_Center}" Content="Text"/>
+
+                        <TextBox Grid.Row="1" Grid.Column="2" Margin="3" Name="Generator_Address" />
+                        <TextBox Grid.Row="2" Grid.Column="2" Margin="3" Name="Generator_Account" />
+                        <TextBox Grid.Row="3" Grid.Column="2" Margin="3" Name="Generator_Password_lv1"  />
+                        <TextBox Grid.Row="4" Grid.Column="2" Margin="3" Name="Generator_Password_lv2"  />
+                        <TextBox Grid.Row="5" Grid.Column="2" Margin="3" Name="Generator_Password_lv3"  />
+                        <TextBox Grid.Row="6" Grid.Column="2" Margin="3" Name="Generator_Password_lv_max"/>
+                        <TextBox Grid.Row="7" Grid.Column="2" Margin="3" Name="Generator_Text" />
+                        <CheckBox Grid.Row="2" Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center" Name="Generator_IsFixedAccount" Content="Fixed"/>
+                        <Grid x:Name="Generator_Select" Grid.Row="3" Grid.Column="3" Grid.RowSpan="4">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="1*"/>
+                                <RowDefinition Height="1*"/>
+                                <RowDefinition Height="1*"/>
+                                <RowDefinition Height="1*"/>
+                            </Grid.RowDefinitions>
+                            <RadioButton Grid.Row="0" Style="{StaticResource RadioButton_VH_Center}" Name="Generator_Select_Password1" GroupName="Generator_Password" IsChecked="True"/>
+                            <RadioButton Grid.Row="1" Style="{StaticResource RadioButton_VH_Center}" Name="Generator_Select_Password2" GroupName="Generator_Password"/>
+                            <RadioButton Grid.Row="2" Style="{StaticResource RadioButton_VH_Center}" Name="Generator_Select_Password3" GroupName="Generator_Password"/>
+                            <RadioButton Grid.Row="3" Style="{StaticResource RadioButton_VH_Center}" Name="Generator_Select_Password_max" GroupName="Generator_Password"/>
+                        </Grid>
+                        <Button Grid.Row="9" Grid.Column="1" Name="Generator_Generate_btn" Content="Generate" Click="Generate_btn_ClickAsync"/>
+                        <Button Grid.Row="9" Grid.Column="3" Name="Generator_SaveResult_btn" Content="Save Result" Click="Generator_SaveResult_btn_ClickAsync"/>
+                    </Grid>
+                </TabItem>
+                <TabItem Header="Search"  Name="Tab_Search">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*" />
+                            <ColumnDefinition Width="1*" />
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="2*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="1*"/>
+                            <RowDefinition Height="1.5*"/>
+                            <RowDefinition Height="1.5*"/>
+                            <RowDefinition Height="1.5*"/>
+                            <RowDefinition Height="1.5*"/>
+                            <RowDefinition Height="1*"/>
+                            <RowDefinition Height="6*"/>
+                        </Grid.RowDefinitions>
+                        <Label Grid.Row="1" Grid.Column="1" Style="{StaticResource Label_VH_Center}" Content="Address"/>
+                        <Label Grid.Row="2" Grid.Column="1" Style="{StaticResource Label_VH_Center}" Content="Account"/>
+                        <Label Grid.Row="3" Grid.Column="1" Style="{StaticResource Label_VH_Center}" Content="Password" />
+                        <Label Grid.Row="4" Grid.Column="1" Style="{StaticResource Label_VH_Center}" Content="Text" />
+                        <TextBox Grid.Row="1" Grid.Column="2" Margin="3" Name="Search_Address" />
+                        <TextBox Grid.Row="2" Grid.Column="2" Margin="3" Name="Search_Account" />
+                        <TextBox Grid.Row="3" Grid.Column="2" Margin="3" Name="Search_Password"/>
+                        <TextBox Grid.Row="4" Grid.Column="2" Margin="3" Name="Search_Text"/>
+                        <Grid x:Name="Search_Select" Grid.RowSpan="4" Grid.Row="1" Grid.Column="3" Margin="5,0,0,0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="1*"/>
+                                <RowDefinition Height="1*"/>
+                                <RowDefinition Height="1*"/>
+                                <RowDefinition Height="1*"/>
+                            </Grid.RowDefinitions>
+                            <RadioButton Grid.Row="0" Name="Search_Select_0" GroupName="Search_Password" Style="{StaticResource RadioButton_VH_Center}" IsChecked="True"/>
+                            <RadioButton Grid.Row="1" Name="Search_Select_1" GroupName="Search_Password" Style="{StaticResource RadioButton_VH_Center}"/>
+                            <RadioButton Grid.Row="2" Name="Search_Select_2" GroupName="Search_Password" Style="{StaticResource RadioButton_VH_Center}"/>
+                            <RadioButton Grid.Row="3" Name="Search_Select_3" GroupName="Search_Password" Style="{StaticResource RadioButton_VH_Center}"/>
+                        </Grid>
+                        <Button Grid.Row="5" Grid.Column="2" Name="Seach_Search_btn" Content="Search" Click="Seach_Search_btn_ClickAsync" />
+                        <DataGrid Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="5" Name="Search_Search_Result" SelectionUnit="Cell">
+                        </DataGrid>
+
+                    </Grid>
+                </TabItem>
+                <TabItem Header="Update"  Name="Tab_Update">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="0.7*"/>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="0.3*"/>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="0.7*"/>
+                            <RowDefinition Height="1*"/>
+                            <RowDefinition Height="1*"/>
+                            <RowDefinition Height="1*"/>
+                            <RowDefinition Height="4.3*"/>
+                        </Grid.RowDefinitions>
+                        <Label Grid.Row="1" Grid.Column="1" Style="{StaticResource Label_VH_Center}" Content="Date" />
+                        <Label Grid.Row="2" Grid.Column="1" Style="{StaticResource Label_VH_Center}" Content="Text" />
+                        <TextBox Grid.Row="1" Grid.Column="3" Margin="5" Name="Update_Date" />
+                        <TextBox Grid.Row="2" Grid.Column="3" Margin="5" Name="Update_Text" />
+                        <Button Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="3" Margin="50,0" Name="Update_Search_btn" Content="Update" Click="Update_btn_ClickAsync"/>
+                    </Grid>
+                </TabItem>
+                <TabItem Header="Delete"  Name="Tab_Delete">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="0.5*"/>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="0.7*"/>
+                            <RowDefinition Height="1*"/>
+                            <RowDefinition Height="1*"/>
+                            <RowDefinition Height="1*"/>
+                            <RowDefinition Height="4.3*"/>
+                        </Grid.RowDefinitions>
+                        <Label Grid.Row="1" Grid.Column="1" Style="{StaticResource Label_VH_Center}" Content="Date" />
+                        <TextBox Grid.Row="1" Grid.Column="3" Grid.ColumnSpan="2" Margin="5" Name="Delete_Date" />
+                        <Button Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="3" Margin="50,0" Name="Delete_btn" Content="Delete" Click="Delete_btn_ClickAsync"/>
+                    </Grid>
+                </TabItem>
+                <TabItem Header="Restore"  Name="Tab_Restore">
+                    <Grid>
+                    </Grid>
+                </TabItem>
+            </TabControl>
+        </Grid>
+        <Label Grid.Row="0" Grid.Column="0" Content="Server Link" HorizontalAlignment="Left"  VerticalAlignment="Top"/>
+        <TextBox Grid.Row="0" Grid.Column="1" Name="ServerLink_btn" HorizontalAlignment="Left"  Text="http://127.0.0.1:8000" TextWrapping="Wrap" VerticalAlignment="Top" Width="190" Grid.ColumnSpan="2" LostFocus="ServerLink_btn_LostFocus"/>
+        <Button  Name="About_btn" Content="About" Padding="10,3"  Click="About_btn_Click" Grid.Column="2" Grid.Row="0" />
+
+    </Grid>
+</Window>
