@@ -26,6 +26,8 @@ namespace WPFDotNetCoreClient
             public string address { get; set; }
             public string account { get; set; }
             public string password { get; set; }
+
+            public string email { get; set; }
             public string date { get; set; }
             public string text { get; set; }
             public Dictionary<string, string> toDictionary()
@@ -34,6 +36,7 @@ namespace WPFDotNetCoreClient
                 d.Add("address", address);
                 d.Add("account", account);
                 d.Add("password", password);
+                d.Add("email", email);
                 d.Add("date", date);
                 d.Add("text", text);
                 return d;
@@ -44,7 +47,7 @@ namespace WPFDotNetCoreClient
             public string message;
             public class Result
             {
-                public string address, account, password_lv1, password_lv2, password_lv3, password_lv_max, date, text;
+                public string address, account, password_lv1, password_lv2, password_lv3, password_lv_max, email, date, text;
             };
             public Result value;
         };
@@ -65,7 +68,7 @@ namespace WPFDotNetCoreClient
         public string __Window_Title = "Account Manager Win Client";
         public string __Author = "Anest";
         public string __API_Version = "v1";
-        public string __GUI_Version = "Jun 7, 2021.";
+        public string __GUI_Version = "Nov 13, 2021.";
         public string __url; // http ://127.0.0.1:8000
         public Item temp_item = null;
         public string AccountStr = "";
@@ -110,7 +113,7 @@ namespace WPFDotNetCoreClient
                 }
                 catch (Exception e)
                 {
-                    MessageBox.Show(e.ToString());
+                    MessageBox.Show(e.ToString(), "PostHttpRequest");
                 }
             return result;
         }
@@ -203,6 +206,7 @@ GUI Version:{2}", __Author, __API_Version, __GUI_Version),
             temp_item.address = Generator_Address.Text;
             temp_item.account = Generator_Account.Text;
             temp_item.text = Generator_Text.Text;
+            temp_item.email = Generator_Email.Text;
             RadioButton checkBtn = Generator_Select.Children.OfType<RadioButton>().FirstOrDefault(r => r.IsChecked.Value);
             switch (checkBtn.Name[checkBtn.Name.Length - 1])
             {
@@ -254,6 +258,9 @@ GUI Version:{2}", __Author, __API_Version, __GUI_Version),
                     temp_item.password = Search_Password.Text;
                     break;
                 case '3':
+                    temp_item.email = Search_Email.Text;
+                    break;
+                case '4':
                     temp_item.text = Search_Text.Text;
                     break;
             }
@@ -280,21 +287,20 @@ GUI Version:{2}", __Author, __API_Version, __GUI_Version),
             }
             posts_v1__item_methods__searchItem r = JsonConvert.DeserializeObject<posts_v1__item_methods__searchItem>(rs);
             ObservableCollection<Item> searchItems = new ObservableCollection<Item>();
-            for (int i = 0; i < r.result.Length - 1; i++)
+            for (int i = 0; i < r.result.Length; i++)
             {
                 searchItems.Add((new Item()
                 {
                     address = r.result[i].address,
                     account = r.result[i].account,
                     password = r.result[i].password,
+                    email = r.result[i].email,
                     date = r.result[i].date,
                     text = r.result[i].text
                 }));
             }
             searchItems.Add(new Item() { address = "Update Date", account = DateTime.Now.ToString(), password = " ", date = " ", text = " " });
             Dispatcher.BeginInvoke(new Action(() => Search_Search_Result.ItemsSource = searchItems));
-            temp_item = null;
-
         }
 
         private async void Update_btn_ClickAsync(object sender, RoutedEventArgs e)
