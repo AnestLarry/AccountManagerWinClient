@@ -1,14 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.DirectoryServices;
-using System.IO;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Net.Security;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -42,28 +35,20 @@ namespace WPFDotNetCoreClient
                 return d;
             }
         }
-        class gets_v1__item_methods__getItems
+        struct gets_v1__item_methods__getItems
         {
-            public string message;
-            public class Result
-            {
-                public string address, account, password_lv1, password_lv2, password_lv3, password_lv_max, email, date, text;
-            };
-            public Result value;
+            public string Message = "";
+            public GeneratorResult Value = new GeneratorResult();
         };
-        class posts_v1__item_methods__searchItem
+        struct posts_v1__item_methods__searchItem
         {
-            public string message;
-            public Item[] result;
+            public string Message = "";
+            public Item[] Result = new Item[] { };
         };
-        class respondChanged
+        struct respondChanged
         {
             public string message { get; set; }
             public uint changed { get; set; }
-        }
-        class MessageResponse
-        {
-            public string message { get; set; }
         }
         public string __Window_Title = "Account Manager Win Client";
         public string __Author = "Anest";
@@ -73,89 +58,7 @@ namespace WPFDotNetCoreClient
         public Item temp_item = null;
         public string AccountStr = "";
         public string PasswordStr = "";
-        public string GetHTTPRequest(string url)
-        {
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-            request.Method = "GET";
-            request.ContentType = "application/json";
-            request.Timeout = 4000;
-            HttpWebResponse response = null;
-            try
-            {
-                response = (HttpWebResponse)request.GetResponse();
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-            Stream myResponseStream = response.GetResponseStream();
-            StreamReader myStreamReader = new StreamReader(myResponseStream, Encoding.GetEncoding("utf-8"));
-            string retString = myStreamReader.ReadToEnd();
-            myStreamReader.Close();
-            myResponseStream.Close();
-            return retString;
-        }
-        public static string PostHttpRequest(string url, Dictionary<string, string> param)
-        {
-            string result = null;
-            using (HttpClient httpClient = new HttpClient(new HttpClientHandler
-            {
-                AutomaticDecompression = DecompressionMethods.None,
-                ClientCertificateOptions = ClientCertificateOption.Automatic
-            }))
-                try
-                {
-                    {
-                        httpClient.BaseAddress = new Uri(url);
-                        FormUrlEncodedContent content = new FormUrlEncodedContent(param);
-                        result = httpClient.PostAsync(url, content).Result.Content.ReadAsStringAsync().Result;
-                    }
-                }
-                catch (Exception)
-                {
-                    throw;
-                }
-            return result;
-        }
-
-        private static bool CheckValidationResult(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors errors)
-        {
-            return true;
-        }
-
-        //https
-        public static HttpWebResponse CreatePostHttpResponse(string url, IDictionary<string, string> parameters, Encoding charset)
-        {
-            HttpWebRequest request = null;
-            ServicePointManager.ServerCertificateValidationCallback = new RemoteCertificateValidationCallback(CheckValidationResult);
-            request = WebRequest.Create(url) as HttpWebRequest;
-            request.ProtocolVersion = HttpVersion.Version10;
-            request.Method = "POST";
-            request.ContentType = "application/x-www-form-urlencoded";
-            if (!(parameters == null || parameters.Count == 0))
-            {
-                StringBuilder buffer = new StringBuilder();
-                int i = 0;
-                foreach (string key in parameters.Keys)
-                {
-                    if (i > 0)
-                    {
-                        buffer.AppendFormat("&{0}={1}", key, parameters[key]);
-                    }
-                    else
-                    {
-                        buffer.AppendFormat("{0}={1}", key, parameters[key]);
-                    }
-                    i++;
-                }
-                byte[] data = charset.GetBytes(buffer.ToString());
-                using (Stream stream = request.GetRequestStream())
-                {
-                    stream.Write(data, 0, data.Length);
-                }
-            }
-            return request.GetResponse() as HttpWebResponse;
-        }
+        private readonly AMHttpUtils AMHttp = new AMHttpUtils();
         public MainWindow()
         {
             InitializeComponent();
@@ -180,24 +83,24 @@ GUI Version:{2}", __Author, __API_Version, __GUI_Version),
             Generator_Generate_btn.IsEnabled = false;
             try
             {
-                string retString = GetHTTPRequest(string.Format("{0}/gets_v1/item_methods/getItems", __url));
+                string retString = AMHttp.GetHTTPRequest(string.Format("{0}/gets_v1/item_methods/getItems", __url));
 
                 gets_v1__item_methods__getItems r = JsonConvert.DeserializeObject<gets_v1__item_methods__getItems>(retString);
-                if (r.message != "succ")
+                if (r.Message != "succ")
                 {
-                    MessageBox.Show(string.Format(@"Fail:", r.message), __Window_Title);
+                    MessageBox.Show(string.Format(@"Fail:", r.Message), __Window_Title);
                     return;
                 }
                 await Dispatcher.BeginInvoke(new Action(() =>
                 {
                     if (Generator_IsFixedAccount.IsChecked.Value == false)
                     {
-                        Generator_Account.Text = r.value.account;
+                        Generator_Account.Text = r.Value.Account;
                     }
-                    Generator_Password_lv1.Text = r.value.password_lv1;
-                    Generator_Password_lv2.Text = r.value.password_lv2;
-                    Generator_Password_lv3.Text = r.value.password_lv3;
-                    Generator_Password_lv_max.Text = r.value.password_lv_max;
+                    Generator_Password_lv1.Text = r.Value.Password_lv1;
+                    Generator_Password_lv2.Text = r.Value.Password_lv2;
+                    Generator_Password_lv3.Text = r.Value.Password_lv3;
+                    Generator_Password_lv_max.Text = r.Value.Password_lv_max;
                 }));
             }
             catch (Exception exceptionxc)
@@ -242,7 +145,7 @@ GUI Version:{2}", __Author, __API_Version, __GUI_Version),
         {
             try
             {
-                string rs = PostHttpRequest(string.Format("{0}/posts_v1/item_methods/saveItem", __url), temp_item.toDictionary());
+                string rs = AMHttp.PostHttpRequest(string.Format("{0}/posts_v1/item_methods/saveItem", __url), temp_item.toDictionary());
                 respondChanged r = JsonConvert.DeserializeObject<respondChanged>(rs);
                 MessageBox.Show(string.Format("status:{0}\nsave {1} record.", r.message, r.changed), __Window_Title);
             }
@@ -290,7 +193,7 @@ GUI Version:{2}", __Author, __API_Version, __GUI_Version),
             string rs = null;
             try
             {
-                rs = PostHttpRequest(string.Format("{0}/posts_v1/item_methods/searchItem", __url), temp_item.toDictionary());
+                rs = AMHttp.PostHttpRequest(string.Format("{0}/posts_v1/item_methods/searchItem", __url), temp_item.toDictionary());
             }
             catch (Exception)
             {
@@ -298,16 +201,16 @@ GUI Version:{2}", __Author, __API_Version, __GUI_Version),
             }
             posts_v1__item_methods__searchItem r = JsonConvert.DeserializeObject<posts_v1__item_methods__searchItem>(rs);
             ObservableCollection<Item> searchItems = new ObservableCollection<Item>();
-            for (int i = 0; i < r.result.Length; i++)
+            for (int i = 0; i < r.Result.Length; i++)
             {
                 searchItems.Add((new Item()
                 {
-                    address = r.result[i].address,
-                    account = r.result[i].account,
-                    password = r.result[i].password,
-                    email = r.result[i].email,
-                    date = r.result[i].date,
-                    text = r.result[i].text
+                    address = r.Result[i].address,
+                    account = r.Result[i].account,
+                    password = r.Result[i].password,
+                    email = r.Result[i].email,
+                    date = r.Result[i].date,
+                    text = r.Result[i].text
                 }));
             }
             searchItems.Add(new Item() { address = "Update Date", account = DateTime.Now.ToString(), password = " ", date = " ", text = " " });
@@ -332,8 +235,8 @@ GUI Version:{2}", __Author, __API_Version, __GUI_Version),
         {
             try
             {
-                string rs = PostHttpRequest(string.Format("{0}/posts_v1/item_methods/updateItem", __url), temp_item.toDictionary());
-                MessageResponse mr = JsonConvert.DeserializeObject<MessageResponse>(rs);
+                string rs = AMHttp.PostHttpRequest(string.Format("{0}/posts_v1/item_methods/updateItem", __url), temp_item.toDictionary());
+                respondChanged mr = JsonConvert.DeserializeObject<respondChanged>(rs);
                 MessageBox.Show(string.Format("{0}", mr.message), __Window_Title);
             }
             catch (Exception e)
@@ -356,7 +259,7 @@ GUI Version:{2}", __Author, __API_Version, __GUI_Version),
         }
         public void Delete_btn_ClickAsync__Work()
         {
-            string rs = PostHttpRequest(string.Format("{0}/posts_v1/item_methods/deleteItem", __url), temp_item.toDictionary());
+            string rs = AMHttp.PostHttpRequest(string.Format("{0}/posts_v1/item_methods/deleteItem", __url), temp_item.toDictionary());
             respondChanged rc = JsonConvert.DeserializeObject<respondChanged>(rs);
             MessageBox.Show(string.Format("status:{0}\ndelete {1} record.", rc.message, rc.changed), __Window_Title);
         }
