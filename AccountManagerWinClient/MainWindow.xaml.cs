@@ -68,7 +68,7 @@ namespace WPFDotNetCoreClient
         public string __Window_Title = "Account Manager Win Client";
         public string __Author = "Anest";
         public string __API_Version = "v1";
-        public string __GUI_Version = "Nov 13, 2021.";
+        public string __GUI_Version = "Spring, 2022.";
         public string __url; // http ://127.0.0.1:8000
         public Item temp_item = null;
         public string AccountStr = "";
@@ -84,9 +84,9 @@ namespace WPFDotNetCoreClient
             {
                 response = (HttpWebResponse)request.GetResponse();
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                MessageBox.Show(e.ToString());
+                throw;
             }
             Stream myResponseStream = response.GetResponseStream();
             StreamReader myStreamReader = new StreamReader(myResponseStream, Encoding.GetEncoding("utf-8"));
@@ -111,9 +111,9 @@ namespace WPFDotNetCoreClient
                         result = httpClient.PostAsync(url, content).Result.Content.ReadAsStringAsync().Result;
                     }
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
-                    MessageBox.Show(e.ToString(), "PostHttpRequest");
+                    throw;
                 }
             return result;
         }
@@ -178,26 +178,37 @@ GUI Version:{2}", __Author, __API_Version, __GUI_Version),
         private async void Generate_btn_ClickAsync(object sender, RoutedEventArgs e)
         {
             Generator_Generate_btn.IsEnabled = false;
-            string retString = GetHTTPRequest(string.Format("{0}/gets_v1/item_methods/getItems", __url));
+            try
+            {
+                string retString = GetHTTPRequest(string.Format("{0}/gets_v1/item_methods/getItems", __url));
 
-            gets_v1__item_methods__getItems r = JsonConvert.DeserializeObject<gets_v1__item_methods__getItems>(retString);
-            if (r.message != "succ")
-            {
-                MessageBox.Show(string.Format(@"Fail:", r.message), __Window_Title);
-                return;
+                gets_v1__item_methods__getItems r = JsonConvert.DeserializeObject<gets_v1__item_methods__getItems>(retString);
+                if (r.message != "succ")
+                {
+                    MessageBox.Show(string.Format(@"Fail:", r.message), __Window_Title);
+                    return;
+                }
+                await Dispatcher.BeginInvoke(new Action(() =>
+                {
+                    if (Generator_IsFixedAccount.IsChecked.Value == false)
+                    {
+                        Generator_Account.Text = r.value.account;
+                    }
+                    Generator_Password_lv1.Text = r.value.password_lv1;
+                    Generator_Password_lv2.Text = r.value.password_lv2;
+                    Generator_Password_lv3.Text = r.value.password_lv3;
+                    Generator_Password_lv_max.Text = r.value.password_lv_max;
+                }));
             }
-            if (Generator_IsFixedAccount.IsChecked.Value == false)
+            catch (Exception exceptionxc)
             {
-                await Dispatcher.BeginInvoke(new Action(() => Generator_Account.Text = r.value.account));
+                MessageBox.Show(exceptionxc.ToString());
             }
-            await Dispatcher.BeginInvoke(new Action(() =>
+            finally
             {
-                Generator_Password_lv1.Text = r.value.password_lv1;
-                Generator_Password_lv2.Text = r.value.password_lv2;
-                Generator_Password_lv3.Text = r.value.password_lv3;
-                Generator_Password_lv_max.Text = r.value.password_lv_max;
-            }));
-            Generator_Generate_btn.IsEnabled = true;
+                Generator_Generate_btn.IsEnabled = true;
+
+            }
         }
         private async void Generator_SaveResult_btn_ClickAsync(object sender, RoutedEventArgs e)
         {
@@ -268,9 +279,9 @@ GUI Version:{2}", __Author, __API_Version, __GUI_Version),
             {
                 await Task.Run(new Action(Seach_Search_btn_Click__Work));
             }
-            catch (Exception e2)
+            catch (Exception exception)
             {
-                MessageBox.Show(e2.ToString(), __Window_Title);
+                MessageBox.Show(exception.ToString(), __Window_Title);
             }
             Seach_Search_btn.IsEnabled = true;
         }
@@ -281,9 +292,9 @@ GUI Version:{2}", __Author, __API_Version, __GUI_Version),
             {
                 rs = PostHttpRequest(string.Format("{0}/posts_v1/item_methods/searchItem", __url), temp_item.toDictionary());
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                MessageBox.Show(e.ToString(), __Window_Title);
+                throw;
             }
             posts_v1__item_methods__searchItem r = JsonConvert.DeserializeObject<posts_v1__item_methods__searchItem>(rs);
             ObservableCollection<Item> searchItems = new ObservableCollection<Item>();
