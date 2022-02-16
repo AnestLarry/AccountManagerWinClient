@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using System.Windows;
 
 [assembly : ThemeInfo (
@@ -8,3 +9,6 @@ using System.Windows;
     //(used if a resource is not found in the page,
     // app, or any theme specific resource dictionaries)
 )]
+#pragma warning disable SYSLIB0025 // Type or member is obsolete
+[assembly: SuppressIldasm()]
+#pragma warning restore SYSLIB0025 // Type or member is obsolete
