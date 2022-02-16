@@ -317,7 +317,7 @@ GUI Version:{2}", __Author, __API_Version, __GUI_Version),
         private async void Update_btn_ClickAsync(object sender, RoutedEventArgs e)
         {
             temp_item = new Item();
-            temp_item.date = Update_Date.Text;
+            temp_item.date = UpdateDelete_Date.Text;
             temp_item.text = Update_Text.Text;
             try
             {
@@ -344,7 +344,7 @@ GUI Version:{2}", __Author, __API_Version, __GUI_Version),
         private async void Delete_btn_ClickAsync(object sender, RoutedEventArgs e)
         {
             temp_item = new Item();
-            temp_item.date = Delete_Date.Text;
+            temp_item.date = UpdateDelete_Date.Text;
             try
             {
                 await Task.Run(new Action(Delete_btn_ClickAsync__Work));
