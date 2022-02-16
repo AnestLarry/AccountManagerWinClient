@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WPFDotNetCoreClient"
         mc:Ignorable="d"
-        Title="Account Manager Client With C#" MaxHeight="650" MaxWidth="850" MinHeight="550" MinWidth="750" ResizeMode="CanResize">
+        Title="Account Manager Client With C#" MaxHeight="800" MaxWidth="1000" MinHeight="600" MinWidth="800" ResizeMode="CanResize">
     <Window.Resources>
         <Style x:Key="Label_VH_Center" TargetType="Label">
             <Setter Property="VerticalContentAlignment" Value="Center" />
